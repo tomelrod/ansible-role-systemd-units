@@ -1,0 +1,21 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+{% if item.Unit is defined %}
+[Unit]
+    {% for v in item.Unit %}
+{{ v }}={{ item.Unit[v] }}
+    {% endfor %}
+{% endif %}
+
+{% if item.Mount is defined %}
+[Mount]
+    {% for v in item.Mount %}
+{{ v }}={{ item.Mount[v] }}
+    {% endfor %}
+{% endif %}
+
+{% if item.Install is defined %}
+[Install]
+    {% for v in item.Install %}
+{{ v }}={{ item.Install[v] }}
+    {% endfor %}
+{% endif %}

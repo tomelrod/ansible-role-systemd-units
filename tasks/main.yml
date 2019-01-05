@@ -1,0 +1,10 @@
+---
+- name: Create the unit files
+  template:
+    src: "unit.j2"
+    dest: "{{ item.path | default('/etc/systemd/system/') }}/{{ item.name }}"
+  with_items: "{{ systemd_units }}"
+  notify: reload systemd
+
+- name: Flush Handlers
+  meta: flush_handlers
