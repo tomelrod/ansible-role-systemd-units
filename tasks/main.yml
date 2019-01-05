@@ -8,3 +8,10 @@
 
 - name: Flush Handlers
   meta: flush_handlers
+
+- name: Configure the units
+  systemd:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('started') }}"
+    enabled: "{{ item.enabled | default(True) }}"
+  with_items: "{{ systemd_units }}"
