@@ -1,4 +1,11 @@
 ---
+- name: Ensure paths exist
+  file:
+    path: "{{ item.path }}"
+    state: directory
+  with_items: "{{ systemd_units }}"
+  when: item.path is defined
+
 - name: Create the unit files
   template:
     src: "unit.j2"
@@ -15,3 +22,4 @@
     state: "{{ item.state | default('started') }}"
     enabled: "{{ item.enabled | default(True) }}"
   with_items: "{{ systemd_units }}"
+  when: item.managed is defined and item.managed
