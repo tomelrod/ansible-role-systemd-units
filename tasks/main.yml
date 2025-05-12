@@ -1,23 +1,29 @@
 ---
 - name: Ensure paths exist
-  file:
-    path: "{{ item.path }}"
+  ansible.builtin.file:
+    path: "{{ item.directory }}"
     state: directory
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: '0755'
   with_items: "{{ systemd_units }}"
-  when: item.path is defined
+  when: item.directory is defined
 
 - name: Create the unit files
-  template:
+  ansible.builtin.template:
     src: "unit.j2"
-    dest: "{{ item.path | default('/etc/systemd/system/') }}/{{ item.name }}"
+    dest: "{{ item.directory | default('/etc/systemd/system/') }}/{{ item.name }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: '0644'
   with_items: "{{ systemd_units }}"
-  notify: reload systemd
+  notify: Reload systemd
 
 - name: Flush Handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Configure the units
-  systemd:
+  ansible.builtin.systemd_service:
     name: "{{ item.name }}"
     state: "{{ item.state | default('started') }}"
     enabled: "{{ item.enabled | default(True) }}"

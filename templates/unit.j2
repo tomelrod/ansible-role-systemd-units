@@ -6,6 +6,13 @@
     {% endfor %}
 {% endif %}
 
+{% if item.Service is defined %}
+[Service]
+    {% for v in item.Service %}
+{{ v }}={{ item.Service[v] }}
+    {% endfor %}
+{% endif %}
+
 {% if item.Mount is defined %}
 [Mount]
     {% for v in item.Mount %}
